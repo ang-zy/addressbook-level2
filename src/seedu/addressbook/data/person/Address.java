@@ -30,11 +30,31 @@ public class Address {
         if (!isValidAddress(trimmedAddress)) {
             throw new IllegalValueException(MESSAGE_ADDRESS_CONSTRAINTS);
         }
-        String[] addressValues=address.split(removePrefix(trimmedAddress, ADDRESS_PREFIX), 4);
-        blockNumber = new Block(addressValues[0].trim());
-        streetName = new Street(addressValues[1].trim());
-        unitNumber = new Unit(addressValues[2].trim());
-        postalCode = new PostalCode(addressValues[3].trim());
+        String[] addressValues=removePrefix(trimmedAddress, ADDRESS_PREFIX).split(",", 4);
+
+        if (addressValues.length>=1){
+            blockNumber = new Block(addressValues[0].trim());
+        } else {
+            blockNumber = null;
+        }
+        
+        if (addressValues.length>=2){
+            streetName = new Street(addressValues[1].trim());
+        } else {
+            streetName = null;
+        }
+        
+        if (addressValues.length>=3){
+            unitNumber = new Unit(addressValues[2].trim());
+        } else {
+            unitNumber = null;
+        }
+        
+        if (addressValues.length>=4){
+            postalCode = new PostalCode(addressValues[3].trim());
+        } else {
+            postalCode = null;
+        }
     }
 
     /**
@@ -82,7 +102,7 @@ public class Address {
      * @return Address with prefix as a String
      */
     public String getValue() {
-        return ADDRESS_PREFIX + combineAddress();
+        return combineAddress();
     }
     
     /**
@@ -90,6 +110,19 @@ public class Address {
      * @return Combined address as a String
      */
     private String combineAddress(){
-        return blockNumber + ", " + streetName + ", " + unitNumber +", " + postalCode;
+        String result = "";
+        if (blockNumber != null) {
+            result += blockNumber.getValue();
+        }
+        if (streetName != null) {
+            result += ", " + streetName.getValue();
+        }
+        if (unitNumber != null) {
+            result += ", " + unitNumber.getValue();
+        }
+        if (postalCode != null) {
+            result += ", " + postalCode.getValue();
+        }
+        return result;
     }
 }
