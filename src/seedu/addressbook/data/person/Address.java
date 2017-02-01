@@ -12,7 +12,7 @@ public class Address {
     public static final String MESSAGE_ADDRESS_CONSTRAINTS = "Person addresses can be in any format";
     public static final String ADDRESS_VALIDATION_REGEX = ".+";
 
-    public final String value;
+    private final String value;
     private boolean isPrivate;
 
     /**
@@ -38,22 +38,30 @@ public class Address {
 
     @Override
     public String toString() {
-        return value;
+        return getValue();
     }
 
     @Override
     public boolean equals(Object other) {
         return other == this // short circuit if same object
                 || (other instanceof Address // instanceof handles nulls
-                && this.value.equals(((Address) other).value)); // state check
+                && this.getValue().equals(((Address) other).getValue())); // state check
     }
 
     @Override
     public int hashCode() {
-        return value.hashCode();
+        return getValue().hashCode();
     }
 
     public boolean isPrivate() {
         return isPrivate;
+    }
+
+    /**
+     * Returns the stored address as a String
+     * @return Address as a String
+     */
+    public String getValue() {
+        return value;
     }
 }
