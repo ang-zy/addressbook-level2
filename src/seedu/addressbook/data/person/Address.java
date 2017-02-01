@@ -13,6 +13,10 @@ public class Address {
     public static final String ADDRESS_VALIDATION_REGEX = ".+";
 
     private final String value;
+    private final Block blockNumber;
+    private final Street streetName;
+    private final Unit unitNumber;
+    private final PostalCode postalCode;
     private boolean isPrivate;
 
     /**
@@ -26,7 +30,24 @@ public class Address {
         if (!isValidAddress(trimmedAddress)) {
             throw new IllegalValueException(MESSAGE_ADDRESS_CONSTRAINTS);
         }
+        String[] addressValues=address.split(removePrefix(trimmedAddress, "a/"), 4);
+        blockNumber = new Block(addressValues[0]);
+        streetName = new Street(addressValues[1]);
+        unitNumber = new Unit(addressValues[2]);
+        postalCode = new PostalCode(addressValues[3]);
         this.value = trimmedAddress;
+    }
+
+    /**
+     * Removes the prefix ("a/") from the front of the parameter
+     * @param Address to be parsed
+     */
+    private String removePrefix(String address, String prefix) {
+        if (address.startsWith(prefix)) {
+            return address.substring(prefix.length());
+        } else {
+            return address;
+        }
     }
 
     /**
