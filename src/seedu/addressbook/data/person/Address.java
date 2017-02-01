@@ -13,7 +13,6 @@ public class Address {
     public static final String ADDRESS_VALIDATION_REGEX = ".+";
     public static final String ADDRESS_PREFIX = "a/";
 
-    private final String value;
     private final Block blockNumber;
     private final Street streetName;
     private final Unit unitNumber;
@@ -32,11 +31,10 @@ public class Address {
             throw new IllegalValueException(MESSAGE_ADDRESS_CONSTRAINTS);
         }
         String[] addressValues=address.split(removePrefix(trimmedAddress, ADDRESS_PREFIX), 4);
-        blockNumber = new Block(addressValues[0]);
-        streetName = new Street(addressValues[1]);
-        unitNumber = new Unit(addressValues[2]);
-        postalCode = new PostalCode(addressValues[3]);
-        this.value = trimmedAddress;
+        blockNumber = new Block(addressValues[0].trim());
+        streetName = new Street(addressValues[1].trim());
+        unitNumber = new Unit(addressValues[2].trim());
+        postalCode = new PostalCode(addressValues[3].trim());
     }
 
     /**
@@ -80,10 +78,18 @@ public class Address {
     }
 
     /**
-     * Returns the stored address as a String
-     * @return Address as a String
+     * Returns the stored address as a String with prefix
+     * @return Address with prefix as a String
      */
     public String getValue() {
-        return value;
+        return ADDRESS_PREFIX + combineAddress();
+    }
+    
+    /**
+     * Combines block, street, unit and postal code into address, and returns it
+     * @return Combined address as a String
+     */
+    private String combineAddress(){
+        return blockNumber + ", " + streetName + ", " + unitNumber +", " + postalCode;
     }
 }
